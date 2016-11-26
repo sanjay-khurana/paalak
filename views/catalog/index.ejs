@@ -1,0 +1,81 @@
+
+
+
+	<header>
+		<div class="main-wrapper">
+			<img class="logo" src="/images/paalak-logo.jpg">
+			<div class="user-icon">
+				<span class="tab-desk-only">Vishal <i class="arrow-down" aria-hidden="true"></i></span>
+
+			</div>			
+			<div class="cart">
+				<span class="mob-only mob-count">3</span>
+				<span class="tab-desk-only dsk-count">3 Items</span>
+			</div>
+
+			
+		</div>
+	</header>
+
+    <section class="mt-20 main-wrapper"><br>
+    	<ul class="nav nav-tabs">
+
+    	   <% for (var i in categories) { %>
+		  <li role="presentation"  data-category-id="<%= i %>" class="category_name <% if (i == 1) { %>active<% } %>"><a href="#"><%= categories[i] %></a></li>
+		   <% } %>
+		</ul>
+		<section class="item-list-group fl"><br>
+			<% for(var i=1; i<products.length; i++) { %>
+			<div class="item-list product_<%= products[i].idProduct %> category_<%= products[i].fkCategoryId %>">
+				<div class="left-section fl">
+					<img class="item-thumbnail" src="/images/tomato.jpg">
+					<div class="item-name fl" data-product-id="<%= products[i].idProduct %>" data-product-name="<%= products[i].name %>">
+						<h5> <%= products[i].name %></h5>
+						<select class="form-control mt-10 item-weight" >
+						  <% for (var variant in products[i].unit) { %>
+						  <option value="<%= products[i].unit[variant].price %>"><%= variant %></option>
+						  <% } %>
+						</select>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="right-section fr">
+					<form class="form-inline item-qty">	   
+					    <div class="input-group">
+					      <span class="input-group-addon sub-qty">-</span>
+					      <input type="text" class="form-control product-cnt" placeholder="0">
+					      <span class="input-group-addon add-qty">+</span>
+					    </div>				    
+					</form>
+					<div class="item-price">Rs. <span class="actual-price"><%= products[i].price %></span> </div>
+					<div class="clear"></div>
+				</div>
+				<div class="clear"></div><br>
+			</div>
+			<% } %>
+		</section>
+
+		<section class="desk-only onpage-cart">
+			<h4 class="cart" style="float: none; width: 250px"> My Basket</h4>
+			<div class="cart-items">
+				
+			</div>
+			<div class="text-align:centre">
+				<div class="btn btn-success btn-md" data-toggle="modal" data-target="#myModal" style="margin: 20px 0 20px 40px; width: 185px">Order Now</div>
+			</div>
+
+		</section>
+
+
+
+    </section>
+    <div class="cart-items-temp hidden">
+				<div class="onpage-cart-item hidden">
+					<div class="fl">
+						<img class="prd-img" src="/images/tomato.jpg">
+						<div class="fl"><span class="prd-name">Tomato</span><br><span class="prd-variant">500 gm</span> x <span class="prd-qty">2</span></div>
+					</div>
+					<div class="price">Rs. <span class="prd-price">120</span></div>
+				<div class="clear"></div>
+		</div>
+	</div>
