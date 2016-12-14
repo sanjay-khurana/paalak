@@ -35,11 +35,29 @@ module.exports.routes = {
   '/': {
     view: 'homepage'
   },
-  '/catalog': {
+  '/catalog/': {
       target: 'CatalogController.index'
   },
-  '/createCategory' : {
+  '/createCategory/' : {
       target : 'CatalogController.create'
+  },
+  '/saveUserCart/' : {
+      target :  'OrderController.cartSave'
+  },
+  '/orderAddress/' : {
+      target : 'OrderController.orderAddress'
+  },
+  '/getPincodeDetails/' : {
+    target: 'OrderController.getPincodeDetails'
+  },
+  '/placeOrder/' : {
+    target: 'OrderController.placeOrder'  
+  },
+  '/verifyOtp' : {
+    target : 'OrderController.verifyOtp'
+  },
+   '/generateOtp' : {
+    target : 'OrderController.generateOtp'
   }
 
   /***************************************************************************

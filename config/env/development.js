@@ -19,6 +19,10 @@ module.exports = {
 
    models: {
      connection: 'someMongodbServer'
-   }
+   },
+   deliverablePincodes: [
+   		'110059', '110001'
+   ],
+   staticsRegex: /\.(eot|ttf|woff|gif|jpeg|jpg|png|woff2|woff|js|css|ico|mp4|webp)$/g
 
 };

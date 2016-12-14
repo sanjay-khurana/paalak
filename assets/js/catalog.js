@@ -8,7 +8,7 @@ Created By: Sanjay Khurana
 
 $(document).ready(function($){
 	
-	var cartJson = JSON.parse(localStorage.getItem('cartJson'));;
+	var cartJson = getCartJson();
 	$('.category_name').click(function(){
 		var categoryId = $(this).attr('data-category-id');
 		showActiveCategory(categoryId);
@@ -29,11 +29,62 @@ $(document).ready(function($){
 		$(this).parents('.item-list').find('.actual-price').html($(this).val());
 	});
 
+	$('.order-now').click(function(){
+		saveCart(true);
+	});
+
+	$('#pincode').blur(function(){
+		if ($(this).val().length == 6) {
+			getPincodeDetails($(this).val());
+		}
+	});
+
+	$('#placeorder').click(function(){
+		placeOrder();
+	});
+
+	$('#generate-otp').click(function(){
+		if (($('#contact-no').val().length > 10 || $('#contact-no').val().length < 10)) {
+			return false;
+		}
+		generateOtp();
+	});
+
+	$('#verify-otp').click(function(){
+		verifyOtp();
+	});
+
+	function generateOtp() {
+		$.ajax({
+			'url' : '/generateOtp',
+			'data' : {'contact' : $('#contact-no').val()},
+			'method' : 'post',
+			'success' : function(response) {
+				$('.generateOtp').addClass('hidden');
+				$('.verifyOtp').removeClass('hidden');
+			}
+		})
+	}
+
+	function verifyOtp() {
+		var data = {"otp" : $('#otp-no').val(), 'contact' : $('#contact-no').val()};
+		$.ajax({
+			'url' : '/verifyOtp',
+			'data': data,
+			'method' : 'post',
+			'success' : function(response) {
+				if (response.success) {
+					window.location.reload();
+				}
+			}
+		})
+		
+	}
 	function showActiveCategory(categoryId){
 		$('.category_name').removeClass('active');
 		$('.item-list').addClass('hidden');
 		$('.category_' + categoryId).removeClass('hidden');
-		$('.category_' + categoryId).parents('.category_name').addClass('active');
+		$('.nav-tabs').find('.category_id_'+ categoryId).addClass('active');
 	}
 
 	function addToBasket(itemList) {
@@ -49,35 +100,36 @@ $(document).ready(function($){
 		productJson.productId = itemList.find('.item-name').data('product-id');
 		productJson.name  = itemList.find('.item-name').data('product-name');
 		productJson.price = itemList.find('.item-weight').val();
-		productJson.qty = productJson.qty + 1;
+		productJson.qty =  1;
 		productJson.variant = itemList.find('.item-weight :selected').text();
 
-
-		if (cartJson.hasOwnProperty(productJson.productId + "-" + productJson.variant)) {
-			cartJson[productJson.productId + "-" + productJson.variant]['qty'] = cartJson[productJson.productId + "-" + productJson.variant]['qty'] + 1; 
+		var cartJson = getCartJson();
+		if (typeof cartJson === 'object' && cartJson.hasOwnProperty(productJson.productId + "-" + productJson.variant)) {
+			cartJson[productJson.productId + "-" + productJson.variant]['qty'] = parseInt(cartJson[productJson.productId + "-" + productJson.variant]['qty']) + 1; 
 		} else {
 			cartJson[productJson.productId + "-" + productJson.variant] = productJson;	
 		}
-		itemList.find('.product-cnt').val(cartJson[productJson.productId + "-" + productJson.variant]['qty']);
+		
 		localStorage.setItem('cartJson', JSON.stringify(cartJson));
-		refreshCart();
+		userState();
 	}
 
 	function removeFromBasket(productId, productVariant) {
 		var userCart =  JSON.parse(localStorage.getItem('cartJson'));
-		if (Object.keys(userCart).length && userCart.hasOwnProperty(productId + '-' + productVariant)) {
+		if (typeof userCart === 'object' && Object.keys(userCart).length && userCart.hasOwnProperty(productId + '-' + productVariant)) {
 			if (userCart[productId + '-' + productVariant].qty == 1) {
 				delete userCart[productId + '-' + productVariant];
+				$('.product_' + productId).find('.product-cnt').val(0);
 			} else {
-				userCart[productId + '-' + productVariant].qty--;
+				userCart[productId + '-' + productVariant].qty = parseInt(userCart[productId + '-' + productVariant].qty) - 1;
 			}
 		}
 		localStorage.setItem('cartJson', JSON.stringify(userCart));
-		refreshCart();
+		userState();
 	}	
 
 	function refreshCart(){
-		var localCartJson = JSON.parse(localStorage.getItem('cartJson'));
+		var localCartJson = getCartJson();
 		var cartHtml = "";
 		var newCartHtml = "";
 		
@@ -91,13 +143,18 @@ $(document).ready(function($){
 			newCartHtml += cartHtml.html();
 			cartHtml = "";
 		}
+		if (newCartHtml === "") {
+			newCartHtml = "Create your basket of fresh produced";
+		}
 		$('.cart-items').html(newCartHtml);
+		saveCart(false);
 	}
 
 	function userState() {
-		var userCart =  JSON.parse(localStorage.getItem('cartJson'));
+		var userCart =  getCartJson();
+		
 		var productId, productVariant, productHtml;
-		if (Object.keys(userCart).length) {
+		if (typeof userCart === 'object' && Object.keys(userCart).length) {
 			$.each(userCart, function(key, value){
 				productId = value.productId;
 				productVariant = value.variant;
@@ -107,6 +164,109 @@ $(document).ready(function($){
 			});
 		}
 		refreshCart();
+	}
+
+	function saveCart(orderNow) {
+		var userCart = getCartJson();
+		var postData = {};
+		if (typeof userCart === 'object'  && Object.keys(userCart).length) {
+			var i=0;
+			$.each(userCart, function(key, value){
+				postData[i] = {};
+				postData[i].productId = value.productId;
+				postData[i].variant = value.variant;
+				postData[i].qty = value.qty;
+				postData[i].price = value.price;
+				postData[i].specialPrice = value.specialPrice;
+				postData[i].name = value.name;
+				i++;
+			});
+		}
+		
+		if (Object.keys(postData).length) {
+			$.ajax({
+				url: '/saveUserCart/',
+				data: postData,
+				method: 'post',
+				success: function(response){
+					if (response.success == true) {
+						if (orderNow) {
+							window.location.href = "/orderAddress/";	
+						}
+					}
+				}
+			})
+		}		
+		
+	}
+
+	function getPincodeDetails(pincode) {
+		var data = {"pincode" : pincode};
+		$.ajax({
+			'method' : 'get',
+			'url': '/getPincodeDetails/',
+			'data': data,
+			success: function(response) {
+
+			}
+		})
+	}
+
+	function showThankyouPage(deliveryTime) {
+		$('.address-screen').hide();
+		$('#final-delivery-time').html(deliveryTime);
+		$('.thankyou-screen').removeClass('hidden');
+		localStorage.removeItem('cartJson');
+	}
+
+	function placeOrder(){
+		$('.error').addClass('hidden');
+		var frm = $('#place-order-form');
+		
+	    frm.submit(function (ev) {
+	        $.ajax({
+	            type: frm.attr('method'),
+	            url: frm.attr('action'),
+	            data: frm.serialize(),
+	            success: function (response) {
+	                if (response.success == false) {
+	                	if (response.errors.length) {
+	                		for (var key in response.errors) {
+	                			$('.' + response.errors[key]).removeClass('hidden');
+	                		}
+	                	}
+	                } else {
+	                	if (response.deliveryTime) {
+	                		showThankyouPage(response.deliveryTime);	
+	                	}
+	                }
+	            }
+	        });
+
+	        ev.preventDefault();
+	    });
+		
+	}
+
+	function getCartJson() {
+		var cartJson  = JSON.parse(localStorage.getItem('cartJson')) != null ? JSON.parse(localStorage.getItem('cartJson')) : {};
+		if (Object.keys(cartJson).length) {
+			return cartJson;
+		} else if ($('.cart-json').length > 1) {
+			
+				var userCartJson = JSON.parse($('.cart-json').html());var newCartJson = {};
+				$.each(userCartJson, function(key, productJson){
+					if (typeof newCartJson === 'object' && cartJson.hasOwnProperty(productJson.productId + "-" + productJson.variant)) {
+						newCartJson[productJson.productId + "-" + productJson.variant]['qty'] = parseInt(newCartJson[productJson.productId + "-" + productJson.variant]['qty']) + 1; 
+					} else {
+						newCartJson[productJson.productId + "-" + productJson.variant] = productJson;	
+					}
+				});
+				return newCartJson;
+		} else {
+			return cartJson;
+		}
+		
 	}
 
 	function init() {

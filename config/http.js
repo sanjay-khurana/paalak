@@ -8,6 +8,7 @@
  * For more information on configuration, check out:
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.http.html
  */
+var uuid = require('node-uuid');
 
 module.exports.http = {
 
@@ -30,23 +31,24 @@ module.exports.http = {
   *                                                                          *
   ***************************************************************************/
 
-    // order: [
+     order: [
     //   'startRequestTimer',
-    //   'cookieParser',
+       'cookieParser',
     //   'session',
-    //   'myRequestLogger',
-    //   'bodyParser',
+       'myUserCookie',
+       'bodyParser',
+       'autologin',
     //   'handleBodyParserError',
     //   'compress',
     //   'methodOverride',
     //   'poweredBy',
     //   '$custom',
-    //   'router',
-    //   'www',
+       'router',
+       'www'
     //   'favicon',
     //   '404',
     //   '500'
-    // ],
+     ],
 
   /****************************************************************************
   *                                                                           *
@@ -54,10 +56,16 @@ module.exports.http = {
   *                                                                           *
   ****************************************************************************/
 
-    // myRequestLogger: function (req, res, next) {
-    //     console.log("Requested :: ", req.method, req.url);
-    //     return next();
-    // }
+     myUserCookie: function (req, res, next) {
+         var userCookie = uuid.v4();
+         if (req.cookies.userCookie) {
+            req.userCookie = req.cookies.userCookie;
+         } else {
+            req.userCookie = userCookie; 
+         }
+         return next();
+     },
+     autologin: require('./../api/middleware/autologin')
 
 
   /***************************************************************************
@@ -77,7 +85,7 @@ module.exports.http = {
 
     // bodyParser: require('skipper')({strict: true})
 
-  },
+  }
 
   /***************************************************************************
   *                                                                          *

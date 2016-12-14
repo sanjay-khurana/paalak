@@ -11,16 +11,6 @@ var BaseController = require('./BaseController');
 var CatalogController = BaseController.extend({
 
 
-	'create' : function(req, res) {
-		var currDate = new Date();
-		ProductCollection.create([
-			]
-			).exec(function(err, category) {
-				console.log("Error", err);
-				console.log("category", category);
-			});	;
-		res.ok({});
-	},
 	'index' : function(req, res) {
 
 		ProductCollection.find().exec(function (err, products) {
@@ -40,7 +30,8 @@ var CatalogController = BaseController.extend({
 								products[key]['categoryName'] = categoryJson[value.fkCategoryId];	
 							})	
 						}
-						res.view('catalog/index.ejs', {"products": products, "categories" : categoryJson});
+						res.cookie('userCookie', req.userCookie);
+						res.view('catalog/index.ejs', {"products": products, "categories" : categoryJson, "req" : req});
 					});
 				}
 			}

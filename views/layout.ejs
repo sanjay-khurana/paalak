@@ -37,10 +37,67 @@
   </head>
 
   <body>
+    
+  <header>
+    <div class="main-wrapper">
+      <img class="logo" src="/images/paalak-logo.jpg">
+      <% if (req.isLoggedIn) { %>
+      <div class="user-icon" >
+        <span class="tab-desk-only"><%= req.user.name  %><i class="arrow-down" aria-hidden="true"></i></span>
+      </div>
+     <% } else { %>
+      <div class="user-icon">
+          <a href="javascript:void(0);" id="login-div" data-toggle="modal" data-target="#otp"><span class="login">Login</span></a>
+      </div>
+       <% } %> 
+      <div class="cart">
+        <span class="mob-only mob-count">3</span>
+        <span class="tab-desk-only dsk-count">3 Items</span>
+      </div>
+
+      
+    </div>
+  </header>
     <%- body %>
 
+    <div id="otp" class="modal fade" role="dialog">
+        <div class="modal-dialog">
 
+          <!-- Modal content-->
+          <div class="modal-content generateOtp">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Enter Your Mobile Number</h4>
+            </div>
+            <div class="modal-body">
+              <div class="col-md-8">
+            <input id="contact-no" name="OTP" type="number" minlength="10" maxlength="10" placeholder="" class="form-control input-md">
+            <div class="error hidden">Please enter correct number</div>               
+          </div><br><br>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" id="generate-otp" >Generate</button>
+            </div>
+          </div>
 
+        </div>
+        <div class="modal-content verifyOtp hidden">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Enter OTP</h4>
+            </div>
+            <div class="modal-body">
+              <div class="col-md-8">
+            <input id="otp-no" name="OTP" type="number" minlength="4" maxlength="4" placeholder="" class="form-control input-md">
+            <div class="error hidden">OTP not correct</div>               
+          </div><br><br>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" id="verify-otp">Submit</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+     </div> 
     <!--
         Client-side Templates
         ========================
@@ -93,7 +150,9 @@
     <!--SCRIPTS-->
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/dependencies/jquery-3.1.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
     <script src="/js/catalog.js"></script>
+    <script src="/js/jquery.cookie.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>
