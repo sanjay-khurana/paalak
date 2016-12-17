@@ -144,7 +144,7 @@ $(document).ready(function($){
 			cartHtml = "";
 		}
 		if (newCartHtml === "") {
-			newCartHtml = "Create your basket of fresh produced";
+			newCartHtml = "Create your basket of fresh produce";
 		}
 		$('.cart-items').html(newCartHtml);
 		saveCart(false);
@@ -153,7 +153,7 @@ $(document).ready(function($){
 	function userState() {
 		var userCart =  getCartJson();
 		
-		var productId, productVariant, productHtml;
+		var productId, productVariant, productHtml;var cartCount = 0;
 		if (typeof userCart === 'object' && Object.keys(userCart).length) {
 			$.each(userCart, function(key, value){
 				productId = value.productId;
@@ -161,8 +161,11 @@ $(document).ready(function($){
 				productDropdown = $('.product_' + productId).find('.item-weight');
 				productDropdown.val(value.price);
 				$('.product_' + productId).find('.product-cnt').val(value.qty);
+				cartCount = cartCount + value.qty;
 			});
 		}
+		$('.dsk-count > span').html(cartCount);
+		$('.mob-count').html(cartCount);
 		refreshCart();
 	}
 
@@ -201,13 +204,18 @@ $(document).ready(function($){
 	}
 
 	function getPincodeDetails(pincode) {
+		$('.wrong-pincode-error').addClass('hidden');
+		$('#placeorder').attr('disabled', false);
 		var data = {"pincode" : pincode};
 		$.ajax({
 			'method' : 'get',
 			'url': '/getPincodeDetails/',
 			'data': data,
 			success: function(response) {
-
+				if (response.success == false) {
+					$('.wrong-pincode-error').removeClass('hidden');
+					$('#placeorder').attr('disabled','disabled');
+				}
 			}
 		})
 	}

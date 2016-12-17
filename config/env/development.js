@@ -23,6 +23,18 @@ module.exports = {
    deliverablePincodes: [
    		'110059', '110001'
    ],
-   staticsRegex: /\.(eot|ttf|woff|gif|jpeg|jpg|png|woff2|woff|js|css|ico|mp4|webp)$/g
+   staticsRegex: /\.(eot|ttf|woff|gif|jpeg|jpg|png|woff2|woff|js|css|ico|mp4|webp)$/g,
+
+   otpApiConfig : {
+      url : 'http://login.goinfinito.com/api/v1/subscribers?auth_token=29dab9d20ba7bd6cd08b7a6d767628a7',
+      listId : 272,
+      userId : 'paalakinf'
+   },
+
+   orderSmsConfig : {
+      url : ' http://login.goinfinito.com/api/v1/subscribers?auth_token=29dab9d20ba7bd6cd08b7a6d767628a7',
+      listId : 273,
+      userId : 'paalakinf'
+   }
 
 };

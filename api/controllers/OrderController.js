@@ -20,15 +20,18 @@ var OrderController = BaseController.extend({
 				'name' : 'Guest',
 				'contact' : "",
 				'cart' : cartData,
-				'address' : ""
+				'address' : JSON.stringify({})
 			}
-			console.log("Req user", req.user);
+			
 			if (!_.isEmpty(req.user)) {
 				userData.name = req.user.name;
 				userData.contact = req.user.contact;
-				userData.address = JSON.stringify(req.user.address);
+
+				if (!_.isEmpty(req.user.address) && !_.isObject(req.user.address)) {
+					userData.address = JSON.stringify(req.user.address);	
+				}
 			}
-			console.log("User data", userData);
+			
 			
 			UserCollection.find({'idSession' : userData.idSession}).exec(function(err, response){
 				if (err) {
@@ -74,8 +77,12 @@ var OrderController = BaseController.extend({
 	
 	'getPincodeDetails' : function(req, res) {
 		var pincode = req.query.pincode;
+		var pincodeAvailaility = _.filter(sails.config.deliverablePincodes, function(pc){
+			return pc == pincode;
+		});
+
 		if (!_.isEmpty(pincode)) {
-			if (_.findIndex(sails.config.deliverablePincodes, pincode)) {
+			if (!_.isEmpty(pincodeAvailaility)) {
 				return res.json({
 					'success' : true
 				});
@@ -143,6 +150,22 @@ var OrderController = BaseController.extend({
 				});
 			}
 
+			var apiRequestUrl = sails.config.orderSmsConfig.url;
+			var apiRequestData = {
+				"listId":sails.config.orderSmsConfig.listId,
+				"userId":sails.config.orderSmsConfig.userId,
+				"subscribers":{
+					"headers":["ID","Name", "Mobileno","ordconfdate"],
+					"data":{
+						"sequence":{
+							"1":{
+								"ID":3,"Name": orderData.name,"Mobileno":orderData.contact,"ordconfdate": orderData.deliveryTime
+							}
+						}
+					}
+				}
+			}
+
 			var data = {};
 			data.deliveryTime = orderData.deliveryTime;
 			UserCollection.find({'idSession' : orderData.idSession}).exec(function(err, response){
@@ -154,31 +177,39 @@ var OrderController = BaseController.extend({
 					
 					if (!_.isEmpty(response) && !_.isEmpty(response[0].cart)) {
 						orderData.cart = response[0].cart;
-						UserCollection.update({'idSession' : orderData.idSession}, {'name' : userData.name, 'contact': userData.contact, 'pincode' : userData.pincode, 'address' : userData.address}).exec(function(err, updateRes){
+						OrderCollection.create(orderData).exec(function(err, resp){
 								if (err) {
-									res.json({
-										'success' : false,
-									});
-								} else {
-								OrderCollection.create(orderData).exec(function(err, resp){
-
-								if (err) {
-									res.json({
+									return res.json({
 										'success' : false
 									});
 								} else {
 									if (!_.isEmpty(res)) {
-										res.json({
-											'success' : true,
-											'deliveryTime' : data.deliveryTime
+										UserCollection.update({'idSession' : orderData.idSession}, {'name' : userData.name, 'contact': userData.contact, 'pincode' : userData.pincode, 'address' : userData.address, 'cart' : ""}).exec(function(err, updateRes){
+											if (err) {
+												// Log Error
+											}
+											var apiRequest = {
+												url : apiRequestUrl,
+												body : JSON.stringify(apiRequestData),
+												method : 'POST',
+												headers: {
+								                    'Content-Type': 'application/json'
+								                 }
+											}
+											ExternalApi.request(apiRequest).then(function(err, response){
+												if (err) {
+													// log error
+												}
+												return res.json({
+														'success' : true,
+														'deliveryTime' : data.deliveryTime
+												});
+											})
 										});
+										
 									}
 								}
 							})
-							}	
-						});
-
-						
 					}
 				}
 
@@ -186,24 +217,41 @@ var OrderController = BaseController.extend({
 		}
 		
 	},
-
+	
 	'verifyOtp' : function(req, res) {
 		
 		if (!_.isEmpty(req.body) && !_.isEmpty(req.body.otp) && !_.isEmpty(req.body.contact)) {
 			var contact = req.body.contact;
-			console.log(req.cookies.userOtp)
 			if (req.body.otp != req.cookies.userOtp) {
 				return res.json({"success" : false, "error" : "OTP does not match"});
 			}
 
 			UserCollection.find({'contact' : contact}).exec(function(err, response){
+
 				if (err) {
 
 				} else {
 					if (!_.isEmpty(response)) {
-						console.log(response);
 						res.cookie('userCookie', response[0].idSession);
 						return res.json({"success" : true})
+					} else {
+						var userData = {
+							'idSession' : req.userCookie,
+							'name' : 'Guest',
+							'contact' : contact,
+							'cart' : "",
+							'address' : JSON.stringify({})
+						}
+						UserCollection.create(userData).exec(function(err, createRes){
+							if (err) {
+								return res.json({
+									'success' : false,
+									"error":
+									'New use create failed'
+								});
+							}
+							return res.json({'success' : true});
+						});
 					}
 				}
 			});		
@@ -215,14 +263,43 @@ var OrderController = BaseController.extend({
 	generateOtp : function(req, res) {
 		if (!_.isEmpty(req.body) && !_.isEmpty(req.body.contact)) {
 			var contact = req.body.contact;
-			// API need to integrate todo
 			var otp = Math.floor(1000 + Math.random() * 9000);
-			res.cookie('userOtp', otp);
-			return res.json({"success" : true});
+			var apiRequestUrl = sails.config.otpApiConfig.url;
+			var apiRequestData = {
+				"listId":sails.config.otpApiConfig.listId,
+				"userId":sails.config.otpApiConfig.userId,
+				"subscribers":{
+					"headers":["SR","Mobileno","otp"],
+					"data":{
+						"sequence":{
+							"4":{
+								"SR":3,"Mobileno":contact,"otp":otp
+							}
+						}
+					}
+				}
+			}
+
+			var apiRequest = {
+				url : apiRequestUrl,
+				body : JSON.stringify(apiRequestData),
+				method : 'POST',
+				headers: {
+                    'Content-Type': 'application/json'
+                 }
+			}
+			
+			ExternalApi.request(apiRequest).then(function(err, response){
+				res.cookie('userOtp', otp);
+				if (err) {
+					return res.json({"success" : true});
+				}
+				
+				return res.json({"success" : true});	
+			})
+			
 		}
 	}
-
-
 
 });
 

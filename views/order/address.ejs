@@ -12,7 +12,8 @@
 				  <label class="col-md-4 control-label" for="pincode">Pin Code</label>  
 				  <div class="col-md-4">
 				  <input id="pincode" name="pincode" type="number" value="<% if (req.user.pincode) { %><%= req.user.pincode %><% } %>"  maxlength="6" minlength="6" placeholder="Enter Pin Code" class="form-control input-md">
-				  <div class="pincode-error error <% if (!data.errors.pincode) { %>hidden<% } %>">Pin code should be 6 character </div>  
+				  <div class="pincode-error error <% if (!data.errors.pincode) { %>hidden<% } %>">Pin code should be 6 character </div> 
+				  <div class="wrong-pincode-error error hidden">We do not deliver in this pincode </div> 
 				  </div>
 				</div>
 
