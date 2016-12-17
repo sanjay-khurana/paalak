@@ -1,10 +1,11 @@
     <section class="mt-20 main-wrapper"><br>
-    	<ul class="nav nav-tabs">
-
-    	   <% for (var i in categories) { %>
-		  <li role="presentation"  data-category-id="<%= i %>" class="category_name category_id_<%= i %>"><a href="#"><%= categories[i] %></a></li>
-		   <% } %>
-		</ul>
+    	<div class="tab-wrapper">
+	    	<ul class="nav nav-tabs">
+	    	   <% for (var i in categories) { %>
+			  <li role="presentation"  data-category-id="<%= i %>" class="category_name category_id_<%= i %>"><a href="#"><%= categories[i] %></a></li>
+			   <% } %>
+			</ul>
+		</div>
 		<section class="item-list-group fl"><br>
 			<% for(var i=1; i<products.length; i++) { %>
 			<div class="item-list product_<%= products[i].idProduct	 %> category_<%= products[i].fkCategoryId %>">
@@ -37,15 +38,30 @@
 		</section>
 
 		<section class="desk-only onpage-cart">
-			<h4 class="cart" style="float: none; width: 250px; padding-left:0px; margin-left:0"> My Basket</h4>
+			<h4 class="cart" style="float: none; width: 250px; margin-left:0"> My Basket</h4>
 			<div class="cart-items">
 				
 			</div>
+			<div class="price-summary">
+				<div class="row">
+					<div class="col-sm-8">Total</div>
+					<div class="col-sm-4">Rs. 430</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-8">Shipping</div>
+					<div class="col-sm-4">0</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-8"><b>Total Payable</b></div>
+					<div class="col-sm-4"><b>Rs. 430</b></div>
+				</div>
+			</div>
 			<div class="text-align:centre">
-				<div class="btn btn-success btn-md order-now" data-toggle="modal" data-target="#myModal" style="margin: 20px 0 20px 40px; width: 185px">Order Now</div>
+				<div class="btn btn-success btn-md order-now" data-toggle="modal" data-target="#myModal" style="margin: 20px 0 20px 40px; width: 185px">ORDER NOW</div>
 			</div>
 
 		</section>
+		<div class="clear"></div>
     </section>
     <div class="cart-items-temp hidden">
 				<div class="onpage-cart-item hidden">
@@ -58,3 +74,43 @@
 		</div>
 	</div>
 	<div class="cart-json"><% if (req.isLoggedIn) { %><%= req.user.cart %><% } %></div>
+
+	<div id="modal-cart" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header" style="padding: 10px">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="caurt" style="float: none; width: 220px; margin:0"> My Basket</h4>
+	      </div>
+	      <div class="modal-body" style="padding: 0px 10px 10px">
+	      	<div class="cart-items">
+				
+			</div>
+			<div class="price-summary" style="border-bottom: 0">
+				<div class="row">
+					<div class="col-sm-8">Total</div>
+					<div class="col-sm-4">Rs. 430</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-8">Shipping</div>
+					<div class="col-sm-4">0</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-8"><b>Total Payable</b></div>
+					<div class="col-sm-4"><b>Rs. 430</b></div>
+				</div>
+			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-success btn-md order-now" data-dismiss="modal">ORDER NOW</button>
+	      </div>
+	    </div>
+
+	  </div>
+	</div>
+	<div class="mob-only sticky-buy-button">
+		<div class="fl mt-10">Total : Rs. 000000</div>
+		<button type="button" class="btn btn-success btn-md order-now fr" data-dismiss="modal">ORDER NOW</button>
+	</div>
