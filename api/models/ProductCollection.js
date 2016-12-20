@@ -14,6 +14,7 @@ attributes: {
   "price": {'type': 'int'},
   "specialPrice": {'type': 'int'},
   "unit": {type : "json"},
+  "isActive" : {'type' : 'boolean'},
   "imagePath": { type: 'string' },
   "createdAt": { type: 'string' },
   "updatedAt": { type: 'string' }

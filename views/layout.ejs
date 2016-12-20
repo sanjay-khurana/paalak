@@ -40,24 +40,36 @@
     
   <header>
     <div class="main-wrapper">
-      <img class="logo" src="/images/paalak-logo.jpg">
-      <% if (req.isLoggedIn) { %>
-      <div class="user-icon" >
-        <span class="tab-desk-only"><%= req.user.name  %><i class="arrow-down" aria-hidden="true"></i></span>
-      </div>
-     <% } else { %>
-      <div class="user-icon">
-          <a href="javascript:void(0);" id="login-div" data-toggle="modal" data-target="#otp"><span class="login">Login</span></a>
-      </div>
-       <% } %> 
-      <div class="cart">
-        <span class="mob-only mob-count">3</span>
-        <span class="tab-desk-only dsk-count"><span class=""></span> Item(s)</span>
-      </div>
-
       
+      <div class="clear"></div>
+      <img class="logo" src="/images/paalak-logo.jpg">
+
+      <div class="fr">
+        <div class="tab-desk-only"> 
+          <img src="/images/phone-icon.png" width="18px"> 01139588188 &nbsp; &nbsp; &nbsp; &nbsp;
+          <img width="20px" src="/images/whatsapp-icon.png"> 09545857545
+        </div>
+        <% if (req.isLoggedIn) { %>
+        <div class="user-icon" >
+          <span class="tab-desk-only"><%= req.user.name  %><i class="arrow-down" aria-hidden="true"></i></span>
+        </div>
+       <% } else { %>
+        <div class="user-icon">
+            <a href="javascript:void(0);" id="login-div" data-toggle="modal" data-target="#otp"><span class="login">Login</span></a>
+        </div>
+         <% } %> 
+        <div class="cart mob-tab-only" data-toggle="modal" data-target="#modal-cart">
+          <span class="tab-desk-only dsk-count"><span class=""></span> Item(s)</span>
+        </div>
+
+      </div>
     </div>
   </header>
+  <div class="mob-only" style="padding:10px; border-bottom: 1px solid #fff">
+    <div class="fl"><img src="/images/phone-icon.png" width="18px"> 01139588188 &nbsp; &nbsp; &nbsp; &nbsp;</div>
+    <div class="fr"><img width="20px" src="/images/whatsapp-icon.png"> 09545857545</div>
+    <div class="clear"></div>
+  </div>
     <%- body %>
 
     <div id="otp" class="modal fade" role="dialog">

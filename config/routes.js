@@ -38,6 +38,15 @@ module.exports.routes = {
   '/catalog/': {
       target: 'CatalogController.index'
   },
+  '/createProduct': {
+      target: 'CatalogController.createProduct'
+  },
+  '/updateProductList' : {
+      target : 'CatalogController.updateProductList'
+  },
+  '/updateProduct/:id' : {
+      target : 'CatalogController.updateProduct'
+  },
   '/createCategory/' : {
       target : 'CatalogController.create'
   },

@@ -132,7 +132,8 @@ $(document).ready(function($){
 		var localCartJson = getCartJson();
 		var cartHtml = "";
 		var newCartHtml = "";
-		
+		var total = 0;
+
 		for (var key in localCartJson) {
 			cartHtml = $('.cart-items-temp');
 			cartHtml.find('.prd-name').html(localCartJson[key].name);
@@ -140,9 +141,13 @@ $(document).ready(function($){
 			cartHtml.find('.prd-price').html(localCartJson[key].price * localCartJson[key].qty);
 			cartHtml.find('.prd-variant').html(localCartJson[key].variant);
 			cartHtml.find('.onpage-cart-item').removeClass('hidden');
+			total = total + parseInt(localCartJson[key].price * localCartJson[key].qty);
 			newCartHtml += cartHtml.html();
 			cartHtml = "";
 		}
+		
+		$('.actual-total').html(total);
+		$('.actual-payable').html(total);
 		if (newCartHtml === "") {
 			newCartHtml = "Create your basket of fresh produce";
 		}
