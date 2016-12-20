@@ -45,15 +45,15 @@
 			<div class="price-summary">
 				<div class="row">
 					<div class="col-sm-8">Total</div>
-					<div class="col-sm-4">Rs. 430</div>
+					<div class="col-sm-4">Rs.  <span class="actual-total"></span></div>
 				</div>
 				<div class="row">
 					<div class="col-sm-8">Shipping</div>
-					<div class="col-sm-4">0</div>
+					<div class="col-sm-4">Rs. 0</div>
 				</div>
 				<div class="row">
 					<div class="col-sm-8"><b>Total Payable</b></div>
-					<div class="col-sm-4"><b>Rs. 430</b></div>
+					<div class="col-sm-4"><b>Rs.  <span class="actual-payable"></span></b></div>
 				</div>
 			</div>
 			<div class="text-align:centre">
@@ -74,7 +74,7 @@
 		</div>
 	</div>
 
-	<div class="cart-json"><% if (req.isLoggedIn) { %><%= req.user.cart %><% } %></div>
+	<div class="cart-json hidden"><% if (req.isLoggedIn) { %><%= req.user.cart %><% } %></div>
 
 	<div id="modal-cart" class="modal fade" role="dialog">
 	  <div class="modal-dialog">
@@ -92,7 +92,7 @@
 			<div class="price-summary" style="border-bottom: 0">
 				<div class="row">
 					<div class="col-sm-8">Total</div>
-					<div class="col-sm-4">Rs. 430</div>
+					<div class="col-sm-4">Rs. <span class="actual-total"></span></div>
 				</div>
 				<div class="row">
 					<div class="col-sm-8">Shipping</div>
@@ -100,7 +100,7 @@
 				</div>
 				<div class="row">
 					<div class="col-sm-8"><b>Total Payable</b></div>
-					<div class="col-sm-4"><b>Rs. 430</b></div>
+					<div class="col-sm-4"><b>Rs. <span class="actual-payable"></span></b></div>
 				</div>
 			</div>
 	      </div>
