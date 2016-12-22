@@ -19,14 +19,16 @@ var OrderController = BaseController.extend({
 				'idSession' : req.userCookie,
 				'name' : 'Guest',
 				'contact' : "",
+				'email' : "",
 				'cart' : cartData,
-				'address' : JSON.stringify({})
+				'address' : JSON.stringify({}),
+				'cartValue' : HelperFunction.getCartValue(cartData)
 			}
 			
 			if (!_.isEmpty(req.user)) {
 				userData.name = req.user.name;
 				userData.contact = req.user.contact;
-
+				userData.email = req.user.email;
 				if (!_.isEmpty(req.user.address) && !_.isObject(req.user.address)) {
 					userData.address = JSON.stringify(req.user.address);	
 				}
@@ -35,6 +37,7 @@ var OrderController = BaseController.extend({
 			
 			UserCollection.find({'idSession' : userData.idSession}).exec(function(err, response){
 				if (err) {
+					BaseController.logInfo("paalak.log", {"ErrorLog" : err, "error" :  "Session Id not found","date" : new Date()});
 					return res.json({
 						'success' : false,
 						"error" :  "Session Id not found"
@@ -44,6 +47,7 @@ var OrderController = BaseController.extend({
 					if (!_.isEmpty(response)) {
 						UserCollection.update({'idSession' : userData.idSession}, userData).exec(function(err, updateRes){
 							if (err) {
+								BaseController.logInfo("paalak.log", {"ErrorLog" : err, 'error':"Update failed", "date" : new Date()});
 								return res.json({
 									'success' : false,
 									'error':"Update failed"
@@ -54,10 +58,10 @@ var OrderController = BaseController.extend({
 					} else {
 						UserCollection.create(userData).exec(function(err, createRes){
 							if (err) {
+								BaseController.logInfo("paalak.log", {"ErrorLog" : err, "error": 'New use create failed', "date" : new Date()});
 								return res.json({
 									'success' : false,
-									"error":
-									'New use create failed'
+									"error": 'New use create failed'
 								});
 							}
 							return res.json({'success' : true});
@@ -66,6 +70,8 @@ var OrderController = BaseController.extend({
 				}
 			});
 			
+		} else {
+
 		}
 	},
 	'orderAddress' : function(req, res) {
@@ -88,6 +94,7 @@ var OrderController = BaseController.extend({
 				});
 			}
 		}
+		BaseController.logInfo("paalak.log", {"InfoLog" : pincode + " Check for availabilty"});
 		return res.json({
 			'success' : false,
 		});
@@ -96,8 +103,10 @@ var OrderController = BaseController.extend({
 		if (!_.isEmpty(req.body)) {
 			var addressData = req.body;
 			var orderData = {};
+			orderData.orderId = 'PAALAK' + HelperFunction.getOrderNumber();
 			orderData.idSession = req.userCookie;
 			orderData.contact = addressData.contact;
+			orderData.email = addressData.email;
 			orderData.name = addressData.name;
 			orderData.pincode = addressData.pincode;
 			orderData.address1 = addressData.address1;
@@ -105,13 +114,17 @@ var OrderController = BaseController.extend({
 			orderData.city = addressData.city;
 			orderData.state = addressData.state;
 			orderData.deliveryTime = addressData.deliveryTime;
+			orderData.paymentMethod = addressData.paymentMethod;
 			orderData.status = "placed";
+			orderData.orderValue = 0;
+
 
 			//Creating data for User Update
 			var userData = {};
 			userData.pincode = orderData.pincode;
 			userData.contact = addressData.contact;
 			userData.name = addressData.name;
+			userData.email = addressData.email;
 			userData.address = JSON.stringify({
 				'address1' : orderData.address1,
 				'address2' : orderData.address2,
@@ -143,7 +156,16 @@ var OrderController = BaseController.extend({
 				errors.push('state-error');
 			}
 
+			if (!orderData.paymentMethod) {
+				errors.push('paymentmethod-error');
+			}
+
+			if (!orderData.email.length) {
+				errors.push('email-error');
+			}
+
 			if (errors.length) {
+				BaseController.logInfo("paalak.log", {"Error Log" : errors});
 				return res.json({
 						'success' : false,
 						'errors' : errors
@@ -166,10 +188,37 @@ var OrderController = BaseController.extend({
 				}
 			}
 
+			var emailRequestUrl = sails.config.orderEmailConfig.url;
+			var emailApiRequestData = {
+				"listId":sails.config.orderEmailConfig.listId,
+				"userId":sails.config.orderEmailConfig.userId,
+				"subscribers":{
+					"headers":["OrderID","name","email","mobile","timeoforder","order_detail","OrderValue","Exp_DeliveryDate","address","Paymentmethod"],
+					"data":{
+						"sequence":{
+							"1":{
+								"OrderID":orderData.orderId,
+								"name": orderData.name,
+								"email":orderData.email,
+								"mobile": orderData.contact,
+								"timeoforder": new Date(),
+								"order_detail" : {},
+								"OrderValue": 0,
+								"Exp_DeliveryDate" : orderData.deliveryTime,
+								"address":orderData.address1 + ', ' + orderData.address2 + ', ' + orderData.city + ', ' + orderData.state + ', ' + orderData.pincode,
+								"Paymentmethod": orderData.paymentMethod
+							}
+						}
+					}
+				}
+			}
+			
+
 			var data = {};
 			data.deliveryTime = orderData.deliveryTime;
 			UserCollection.find({'idSession' : orderData.idSession}).exec(function(err, response){
 				if (err) {
+					BaseController.logInfo("paalak.log", {"Error Log" : "Session Id Not found in order"});
 					return res.json({
 						'success' : false
 					});
@@ -177,14 +226,19 @@ var OrderController = BaseController.extend({
 					
 					if (!_.isEmpty(response) && !_.isEmpty(response[0].cart)) {
 						orderData.cart = response[0].cart;
+						orderData.orderValue = response[0].cartValue;
+						emailApiRequestData.subscribers.data.sequence["1"].order_detail = JSON.stringify(orderData.cart);
+						emailApiRequestData.subscribers.data.sequence["1"].OrderValue = orderData.orderValue;
+						
 						OrderCollection.create(orderData).exec(function(err, resp){
 								if (err) {
+									BaseController.logInfo("paalak.log", {"Error Log" : "Order Creating Issue"});
 									return res.json({
 										'success' : false
 									});
 								} else {
 									if (!_.isEmpty(res)) {
-										UserCollection.update({'idSession' : orderData.idSession}, {'name' : userData.name, 'contact': userData.contact, 'pincode' : userData.pincode, 'address' : userData.address, 'cart' : ""}).exec(function(err, updateRes){
+										UserCollection.update({'idSession' : orderData.idSession}, {'name' : userData.name, 'contact': userData.contact, 'pincode' : userData.pincode, 'address' : userData.address, 'cart' : "", "email" : userData.email}).exec(function(err, updateRes){
 											if (err) {
 												// Log Error
 											}
@@ -196,15 +250,25 @@ var OrderController = BaseController.extend({
 								                    'Content-Type': 'application/json'
 								                 }
 											}
-											ExternalApi.request(apiRequest).then(function(err, response){
-												if (err) {
-													// log error
-												}
+											ExternalApi.request(apiRequest).then(function(response){
+												
 												return res.json({
 														'success' : true,
 														'deliveryTime' : data.deliveryTime
 												});
-											})
+											});
+											var emailApiRequest = {
+												url : emailRequestUrl,
+												body : JSON.stringify(emailApiRequestData),
+												method : 'POST',
+												headers: {
+								                    'Content-Type': 'application/json'
+								                 }
+											}
+											ExternalApi.request(emailApiRequest).then(function(response){
+												
+											});
+
 										});
 										
 									}

@@ -67,6 +67,24 @@ module.exports.routes = {
   },
    '/generateOtp' : {
     target : 'OrderController.generateOtp'
+  },
+  '/refund-cancellation-policy/' : {
+    target : 'CmsController.refundPolicy'
+  },
+  '/about-us/' : {
+    target : 'CmsController.aboutUs'
+  },
+  '/call-01139588188/' : {
+    target : 'CmsController.call'
+  },
+  '/whatsapp-9999026353/' : {
+    target : 'CmsController.whatsApp'
+  },
+  '/we-do-bulk-supplies/' : {
+    target : 'CmsController.bulkSupplies'
+  },
+  '/privacy-policy/' : {
+    target : 'CmsController.privacyPolicy'
   }
 
   /***************************************************************************

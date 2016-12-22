@@ -8,6 +8,7 @@ var moment =require('moment');
 var HelperFunction =  {
 
 	getDeliveryTimeOptions : function() {
+
 		var timeSlots = {9 : "09:00 AM - 10:00 AM", 10 : "10:00 AM - 11:00 AM", 11 : "11:00 AM - 12:00 PM", 
 							12 : "12:00 AM - 01:00 PM", 13: "01:00 PM - 02:00 PM", 
 							14 : "02:00 PM - 03:00 PM", 15 : "03:00 PM - 04:00 PM", 16 : "04:00 PM - 05:00 PM",
@@ -33,6 +34,24 @@ var HelperFunction =  {
 			 
 		}
 		return availableTimeSlots;
+	},
+
+	getOrderNumber : function() {
+		return moment().format("YYMMDDHHmmss");
+	},
+
+	getCartValue : function(cartData) {
+		var cartValue = 0;
+		if (!_.isEmpty(cartData)) {
+			_.forEach(cartData, function(value, key){
+				if (value.specialPrice > 0) {
+					cartValue += parseInt(value.specialPrice, 2);
+				} else {
+					cartValue += parseInt(value.price, 10);
+				}
+			})
+		}
+		return cartValue;
 	}
 
 

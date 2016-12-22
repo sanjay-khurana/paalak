@@ -11,8 +11,10 @@ module.exports = {
 	    "idSession": {'type':'string'},
 	    "name": {'type' : 'string'},
 	    "contact" : {'type' : "string"},
+	    "email" : {'type' : "string"},
 	    "pincode" : {'type' : "int"},
 	    "cart": {'type':'json'},
-	    "address" : {'type' : 'string'}
+	    "address" : {'type' : 'string'},
+	    "cartValue" : {'type' : 'int'}
 	}
 };

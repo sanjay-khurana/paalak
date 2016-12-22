@@ -7,13 +7,10 @@ Catalog Listing Functionality
 
 var BaseController = require('./BaseController');
 
-
 var CatalogController = BaseController.extend({
 
 	'createProduct' : function(req, res) {
-
 		if (req.method == 'POST') {
-
 			var productData = {
 			 "idProduct": 23,
 			  "name": req.body.prdoductname,
@@ -36,7 +33,8 @@ var CatalogController = BaseController.extend({
 			
 		ProductCollection.create(productData).exec(function(error, response){
 			if (error) {
-				console.log("Error", error)
+				BaseController.logInfo("paalak.log", {"ErrorLog" : err});
+				return res.view('500.ejs');
 			} else {
 				if (!_.isEmpty(response)) {
 					return res.view('catalog/success.ejs');
@@ -46,7 +44,8 @@ var CatalogController = BaseController.extend({
 		} else {
 			CategoryCollection.find().exec(function(error, categories){
 				if (error) {
-
+					BaseController.logInfo("paalak.log", {"ErrorLog" : err});
+					return res.view('500.ejs');
 				} else {
 					if (!_.isEmpty(categories)) {
 						var data = {};
@@ -86,7 +85,8 @@ var CatalogController = BaseController.extend({
 			
 		ProductCollection.update({'idProduct' : productData.idProduct}, productData).exec(function(error, response){
 			if (error) {
-				console.log("Error", error)
+				BaseController.logInfo("paalak.log", {"ErrorLog" : err});
+				return res.view('500.ejs');
 			} else {
 				if (!_.isEmpty(response)) {
 					return res.view('catalog/success.ejs');
@@ -96,11 +96,12 @@ var CatalogController = BaseController.extend({
 		} else {
 			CategoryCollection.find().exec(function(error, categories){
 				if (error) {
-					console.log(error);
+					BaseController.logInfo("paalak.log", {"ErrorLog" : err});
+					return res.view('500.ejs');
 				} else {
 					ProductCollection.find({'idProduct' : req.param('id')}).exec(function (err, product) {
 						if (!_.isEmpty(product[0])) {
-							var data = {};
+							
 							data.categories = categories;
 							data.product = product[0];
 							var productvariant=[];var prdVariantPrice=[];
@@ -111,8 +112,12 @@ var CatalogController = BaseController.extend({
 							data.prdVariant = productvariant.join(',');
 							data.prdVariantPrice = prdVariantPrice.join(',');
 							return res.view('catalog/updateProduct.ejs', {"data" : data});			
+						} else {
+							BaseController.logInfo("paalak.log", {"ErrorLog" : 'No Product Exist'});
+							var data = {};
+							return res.view('catalog/updateProduct.ejs', {"data" : data});	
 						}
-				});
+					});
 				}
 			});
 			
@@ -122,7 +127,8 @@ var CatalogController = BaseController.extend({
 	'updateProductList' : function(req, res) {
 		ProductCollection.find().exec(function (err, products) {
 			if (err) {
-				console.log("error", err);
+				BaseController.logInfo("paalak.log", {"ErrorLog" : err});
+				return res.view('500.ejs');
 			} else {
 				if (!_.isEmpty(products)) {
 					CategoryCollection.find().exec(function(error, categories){
@@ -138,7 +144,7 @@ var CatalogController = BaseController.extend({
 							})	
 						}
 						res.cookie('userCookie', req.userCookie);
-						res.view('catalog/updateProductList.ejs', {"products": products, "categories" : categoryJson, "req" : req});
+						return res.view('catalog/updateProductList.ejs', {"products": products, "categories" : categoryJson, "req" : req});
 					});
 				}
 			}
@@ -149,10 +155,10 @@ var CatalogController = BaseController.extend({
 
 		ProductCollection.find({'isActive' : true}).exec(function (err, products) {
 			if (err) {
-				BaseController.logInfo("paalak.log", {"testLog" : "Error Log"});
+				BaseController.logInfo("paalak.log", {"ErrorLog" : err, "date" : new Date()});
+				return res.view('500.ejs');
 			} else {
 				if (!_.isEmpty(products)) {
-					BaseController.logInfo("paalak", {"testLog" : "Error Log"});
 					CategoryCollection.find().exec(function(error, categories){
 						var categoryJson = [];
 						if (!_.isEmpty(categories)) {
@@ -166,8 +172,11 @@ var CatalogController = BaseController.extend({
 							})	
 						}
 						res.cookie('userCookie', req.userCookie);
-						res.view('catalog/index.ejs', {"products": products, "categories" : categoryJson, "req" : req});
+						return res.view('catalog/index.ejs', {"products": products, "categories" : categoryJson, "req" : req});
 					});
+				} else {
+					BaseController.logInfo("paalak.log", {"ErrorLog" : err, "date" : new Date()});
+					return res.view('500.ejs');
 				}
 			}
 		});

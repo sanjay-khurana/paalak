@@ -35,6 +35,12 @@ module.exports = {
       url : ' http://login.goinfinito.com/api/v1/subscribers?auth_token=29dab9d20ba7bd6cd08b7a6d767628a7',
       listId : 273,
       userId : 'paalakinf'
+   },
+
+   orderEmailConfig : {
+      url : ' http://login.goinfinito.com/api/v1/subscribers?auth_token=29dab9d20ba7bd6cd08b7a6d767628a7',
+      listId : 288,
+      userId : 'paalakinf'
    }
 
 };

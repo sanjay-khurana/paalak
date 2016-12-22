@@ -62,6 +62,14 @@
 				  </div>
 				</div>
 
+				<div class="form-group">
+				  <label class="col-md-4 control-label" for="email">Email<span class="red">*</span></label>  
+				  <div class="col-md-4">
+				  <input id="email" name="email" value="<% if (req.user.email) { %><%= req.user.email %><% } %>"  type="email" placeholder="Enter you mail id" class="form-control input-md">
+				  <div class="email-error error <% if (!data.errors.email) { %>hidden<% } %>">This field is mandatory</div>   
+				  </div>
+				</div>
+
 				<!-- Text input-->
 				<div class="form-group">
 				  <label class="col-md-4 control-label" for="state">State<span class="red">*</span></label>  
@@ -71,6 +79,15 @@
 				  </div>
 				</div>
 				
+				<div class="form-group">
+				  <label class="col-md-4 control-label" for="Payment Type">Payment Method<span class="red">*</span></label>  
+				  <div class="col-md-4">
+				  <input id="PaytmId" name="paymentMethod" value="PayTm" type="radio" placeholder="" class="form-control input-md"><label for="PaytmId">Paytm</label>
+				  <input id="cashId" name="paymentMethod" value="Cash" type="radio" placeholder="" class="form-control input-md"><label for="cashId">Cash</label>
+				   <div class="paymentmethod-error error hidden">This field is mandatory </div> 
+				  </div>
+				</div>
+
 				<div class="form-group">
 				  <label class="col-md-4 control-label" for="">Delivery Time<span class="red">*</span></label>
 				  <div class="col-md-6">
