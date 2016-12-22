@@ -90,7 +90,9 @@ var OrderController = BaseController.extend({
 		if (!_.isEmpty(pincode)) {
 			if (!_.isEmpty(pincodeAvailaility)) {
 				return res.json({
-					'success' : true
+					'success' : true,
+					'city' : sails.config.pincodeCityStateMapping[pincode].city,
+					'state' : sails.config.pincodeCityStateMapping[pincode].state
 				});
 			}
 		}
@@ -266,7 +268,7 @@ var OrderController = BaseController.extend({
 								                 }
 											}
 											ExternalApi.request(emailApiRequest).then(function(response){
-												
+													
 											});
 
 										});

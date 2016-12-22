@@ -21,7 +21,7 @@ module.exports = {
      connection: 'someMongodbServer'
    },
    deliverablePincodes: [
-   		'110059', '110001'
+   		'201301', '201302', '201303', '201304', '110063', '110025', '110026'
    ],
    staticsRegex: /\.(eot|ttf|woff|gif|jpeg|jpg|png|woff2|woff|js|css|ico|mp4|webp)$/g,
 
@@ -41,6 +41,37 @@ module.exports = {
       url : ' http://login.goinfinito.com/api/v1/subscribers?auth_token=29dab9d20ba7bd6cd08b7a6d767628a7',
       listId : 288,
       userId : 'paalakinf'
+   },
+
+   pincodeCityStateMapping : {
+      '201301' : {
+         'city' : 'Noida',
+         'state' : 'Uttar Pradesh'
+      },
+      '201302' : {
+         'city' : 'Noida',
+         'state' : 'Uttar Pradesh'
+      },
+      '201303' : {
+         'city' : 'Noida',
+         'state' : 'Uttar Pradesh'
+      },
+      '201304' : {
+         'city' : 'Noida',
+         'state' : 'Uttar Pradesh'
+      },
+      '110063' : {
+         'city' : 'New Delhi',
+         'state' : 'Delhi'
+      },
+      '110025' : {
+         'city' : 'New Delhi',
+         'state' : 'Delhi'
+      },
+      '110026' : {
+         'city' : 'New Delhi',
+         'state' : 'Delhi'
+      }
    }
 
 };

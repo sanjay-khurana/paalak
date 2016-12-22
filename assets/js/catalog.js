@@ -33,7 +33,7 @@ $(document).ready(function($){
 		saveCart(true);
 	});
 
-	$('#pincode').blur(function(){
+	$('#pincode').on('change', function(){
 		if ($(this).val().length == 6) {
 			getPincodeDetails($(this).val());
 		}
@@ -220,6 +220,9 @@ $(document).ready(function($){
 				if (response.success == false) {
 					$('.wrong-pincode-error').removeClass('hidden');
 					$('#placeorder').attr('disabled','disabled');
+				} else {
+					$('#city').val(response.city);
+					$('#state').val(response.state);
 				}
 			}
 		})
@@ -235,7 +238,7 @@ $(document).ready(function($){
 	function placeOrder(){
 		$('.error').addClass('hidden');
 		var frm = $('#place-order-form');
-		
+		$('#placeOrder').attr('disabled', 'disabled');
 	    frm.submit(function (ev) {
 	        $.ajax({
 	            type: frm.attr('method'),
@@ -248,6 +251,7 @@ $(document).ready(function($){
 	                			$('.' + response.errors[key]).removeClass('hidden');
 	                		}
 	                	}
+	                	$('#placeOrder').attr('disabled', false);
 	                } else {
 	                	if (response.deliveryTime) {
 	                		showThankyouPage(response.deliveryTime);	
