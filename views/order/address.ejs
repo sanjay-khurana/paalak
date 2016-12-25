@@ -85,8 +85,10 @@
 				<div class="form-group">
 				  <label class="col-md-4 control-label" for="Payment Type">Payment Method<span class="red">*</span></label>  
 				  <div class="col-md-4">
-				  <input id="PaytmId" name="paymentMethod" value="PayTm" type="radio" placeholder="" class="form-control input-md"><label for="PaytmId">Paytm</label>
-				  <input id="cashId" name="paymentMethod" value="Cash" type="radio" placeholder="" class="form-control input-md"><label for="cashId">Cash</label>
+				  <input id="OnlinePayment" name="paymentMethod" value="Online" type="radio" placeholder="" class="form-control input-md"><label for="OnlinePayment">Online Payment</label>
+				  <input id="cashId" name="paymentMethod" value="Cash" type="radio" placeholder="" class="form-control input-md"><label for="cashId">Cash on Delivery</label>
+				  <input id="PaytmId" name="paymentMethod" value="PayTm" type="radio" placeholder="" class="form-control input-md"><label for="PaytmId">Paytm on Delivery</label>
+				  <input id="CardOnDelivery" name="paymentMethod" value="CardOnDelivery" type="radio" placeholder="" class="form-control input-md"><label for="CardOnDelivery">Card on Delivery</label>
 				   <div class="paymentmethod-error error hidden">This field is mandatory </div> 
 				  </div>
 				</div>
@@ -122,7 +124,7 @@
 
 			<span style="font-size:18px">Thanks for Placing Order</span><br><br>
 			Your Basket of Fresh Fruits/Vegetables will be delivered to you on <br> <span id="final-delivery-time"></span><br><br>
-			<a href='/catalog/'>
+			<a href='/'>
 			<button id="placeorder" name="placeorder" class="btn btn-primary">Continue Shopping</button></a><br><br>
 
 

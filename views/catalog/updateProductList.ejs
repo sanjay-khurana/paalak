@@ -7,10 +7,10 @@
 			</ul>
 		</div>
 		<section class="item-list-group fl"><br>
-			<% for(var i=1; i<products.length; i++) { %>
+			<% for(var i=0; i<products.length; i++) { %>
 			<div class="item-list product_<%= products[i].idProduct	 %> category_<%= products[i].fkCategoryId %>">
 				<div class="left-section fl">
-					<img class="item-thumbnail" src="/images/tomato.jpg">
+					<img class="item-thumbnail" data-src-imageName="<%= products[i].imagePath %>" src="/images/<%= products[i].imagePath %>">
 					<div class="item-name fl" data-product-id="<%= products[i].idProduct %>" data-product-name="<%= products[i].name %>">
 						<h5> <%= products[i].name %></h5>
 					</div>

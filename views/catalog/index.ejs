@@ -7,10 +7,10 @@
 			</ul>
 		</div>
 		<section class="item-list-group fl"><br>
-			<% for(var i=1; i<products.length; i++) { %>
+			<% for(var i=0; i<products.length; i++) { %>
 			<div class="item-list product_<%= products[i].idProduct	 %> category_<%= products[i].fkCategoryId %>">
 				<div class="left-section fl">
-					<img class="item-thumbnail" src="/images/tomato.jpg">
+					<img class="item-thumbnail itemImage" data-src-imageName="<%= products[i].imagePath %>" src="/images/<%= products[i].imagePath %>">
 					<div class="item-name fl" data-product-id="<%= products[i].idProduct %>" data-product-name="<%= products[i].name %>">
 						<h5> <%= products[i].name %></h5>
 						<select class="form-control mt-10 item-weight" >
@@ -66,7 +66,7 @@
     <div class="cart-items-temp hidden">
 				<div class="onpage-cart-item hidden">
 					<div class="fl">
-						<img class="prd-img" src="/images/tomato.jpg">
+						<img class="prd-img" src="">
 						<div class="fl"><span class="prd-name">Tomato</span><br><span class="prd-variant">500 gm</span> x <span class="prd-qty">2</span></div>
 					</div>
 					<div class="price">Rs. <span class="prd-price">120</span></div>

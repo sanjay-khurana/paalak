@@ -55,7 +55,7 @@
 				  <label class="col-md-4 control-label" for="pincode">Is Active<span class="red">*</span></label>  
 				  <div class="col-md-4">
 				 
-				  <input id="productimage" name="isActive" type="checkbox" checked="checked" class="form-control input-md">
+				  <input id="productimage" name="isActive"  type="checkbox" <% if (data.product.isActive) { %>checked="checked" <% } %> class="form-control input-md">
 				</div>
 				</div>
 

@@ -32,10 +32,8 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
+  
   '/': {
-    view: 'homepage'
-  },
-  '/catalog/': {
       target: 'CatalogController.index'
   },
   '/createProduct': {

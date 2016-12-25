@@ -102,6 +102,7 @@ $(document).ready(function($){
 		productJson.price = itemList.find('.item-weight').val();
 		productJson.qty =  1;
 		productJson.variant = itemList.find('.item-weight :selected').text();
+		productJson.image = itemList.find('.itemImage').attr('data-src-imageName');
 
 		var cartJson = getCartJson();
 		if (typeof cartJson === 'object' && cartJson.hasOwnProperty(productJson.productId + "-" + productJson.variant)) {
@@ -141,6 +142,7 @@ $(document).ready(function($){
 			cartHtml.find('.prd-price').html(localCartJson[key].price * localCartJson[key].qty);
 			cartHtml.find('.prd-variant').html(localCartJson[key].variant);
 			cartHtml.find('.onpage-cart-item').removeClass('hidden');
+			cartHtml.find('.prd-img').attr('src', '/images/' + localCartJson[key].image);
 			total = total + parseInt(localCartJson[key].price * localCartJson[key].qty);
 			newCartHtml += cartHtml.html();
 			cartHtml = "";
