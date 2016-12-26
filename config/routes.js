@@ -85,6 +85,9 @@ module.exports.routes = {
   },
   '/privacy-policy/' : {
     target : 'CmsController.privacyPolicy'
+  },
+  '/contact/' : {
+    target : 'CmsController.contact'
   }
 
   /***************************************************************************

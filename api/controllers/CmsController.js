@@ -24,6 +24,9 @@ var CmsController = BaseController.extend({
 	bulkSupplies : function (req, res) {
 		return res.view('cms/bulk-supplies.ejs');
 	}
+	contact : function (req, res) {
+		return res.view('cms/contact.ejs');
+	}
 
 });
 

@@ -159,6 +159,9 @@ header .cart span.desk-count {
 	padding: 5px 0;
 	text-align: right;
 }
+.white-bg {
+	background: #fff;
+}
 	
 
 /* media query for responsive design starts here */
