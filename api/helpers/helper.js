@@ -52,10 +52,20 @@ var HelperFunction =  {
 			})
 		}
 		return cartValue;
+	},
+	getOrderDetailHtml : function(cartData) {
+		var cartString = "";
+		_.forEach(cartData, function(value, key){
+			cartString += "<br>";
+			cartString += value.qty + 'X ';
+			cartString += value.name + " ";
+			cartString += value.variant + " ";
+			cartString += "Rs. " + value.price + ' each';
+			cartString += "</>";
+		});
+		return String(cartString).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+		//return ;
 	}
-
-
-
 }
 
 module.exports = HelperFunction;

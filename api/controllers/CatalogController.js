@@ -11,35 +11,38 @@ var CatalogController = BaseController.extend({
 
 	'createProduct' : function(req, res) {
 		if (req.method == 'POST') {
-			var productData = {
-			 "idProduct": 23,
-			  "name": req.body.prdoductname,
-			  "fkCategoryId": req.body.categoryId,
-			  "price": req.body.productprice,
-			  "specialPrice": req.body.productspprice,
-			  "unit":  {},
-			  "isActive" : req.body.isActive ? true : false,
-			  "imagePath": "/images/capsicum.png"
-			}
-			if (!_.isEmpty(req.body.productvariant) && !_.isEmpty(req.body.productvariantprice)) {
-				var prdVariant = req.body.productvariant.split(',');
-				var prdPrice = req.body.productvariantprice.split(',');
-				_.forEach(prdVariant, function(value, key){
-					productData.unit[value] = {};
-					productData.unit[value].price = prdPrice[key];
-					productData.unit[value].specialPrice = 0;
-				});
-			}
-			
-		ProductCollection.create(productData).exec(function(error, response){
-			if (error) {
-				BaseController.logInfo("paalak.log", {"ErrorLog" : err});
-				return res.view('500.ejs');
-			} else {
-				if (!_.isEmpty(response)) {
-					return res.view('catalog/success.ejs');
+			ProductCollection.find({}).sort('createdAt DESC').limit(1).exec(function(err, respProd){
+				var idProduct = !_.isEmpty(respProd) && !_.isEmpty(respProd[0]) ? parseInt(respProd[0].idProduct, 10) + 1 : 1; 
+				var productData = {
+				 "idProduct": idProduct,
+				  "name": req.body.prdoductname,
+				  "fkCategoryId": req.body.categoryId,
+				  "price": req.body.productprice,
+				  "specialPrice": req.body.productspprice,
+				  "unit":  {},
+				  "isActive" : req.body.isActive ? true : false,
+				  "imagePath": req.body.productimage
 				}
-			}
+				if (!_.isEmpty(req.body.productvariant) && !_.isEmpty(req.body.productvariantprice)) {
+					var prdVariant = req.body.productvariant.split(',');
+					var prdPrice = req.body.productvariantprice.split(',');
+					_.forEach(prdVariant, function(value, key){
+						productData.unit[value] = {};
+						productData.unit[value].price = prdPrice[key];
+						productData.unit[value].specialPrice = 0;
+					});
+				}
+				
+			ProductCollection.create(productData).exec(function(error, response){
+				if (error) {
+					BaseController.logInfo("paalak.log", {"ErrorLog" : err});
+					return res.view('500.ejs');
+				} else {
+					if (!_.isEmpty(response)) {
+						return res.view('catalog/success.ejs');
+					}
+				}
+			});
 		});	
 		} else {
 			CategoryCollection.find().exec(function(error, categories){
@@ -71,7 +74,7 @@ var CatalogController = BaseController.extend({
 			  "specialPrice": req.body.productspprice,
 			  "unit":  {},
 			  "isActive" : req.body.isActive ? true : false,
-			  "imagePath": "/images/capsicum.png"
+			  "imagePath": req.body.productimage
 			}
 			if (!_.isEmpty(req.body.productvariant) && !_.isEmpty(req.body.productvariantprice)) {
 				var prdVariant = req.body.productvariant.split(',');
@@ -101,7 +104,7 @@ var CatalogController = BaseController.extend({
 				} else {
 					ProductCollection.find({'idProduct' : req.param('id')}).exec(function (err, product) {
 						if (!_.isEmpty(product[0])) {
-							
+							var data = {};
 							data.categories = categories;
 							data.product = product[0];
 							var productvariant=[];var prdVariantPrice=[];

@@ -229,7 +229,7 @@ var OrderController = BaseController.extend({
 					if (!_.isEmpty(response) && !_.isEmpty(response[0].cart)) {
 						orderData.cart = response[0].cart;
 						orderData.orderValue = response[0].cartValue;
-						emailApiRequestData.subscribers.data.sequence["1"].order_detail = JSON.stringify(orderData.cart);
+						emailApiRequestData.subscribers.data.sequence["1"].order_detail = HelperFunction.getOrderDetailHtml(orderData.cart);
 						emailApiRequestData.subscribers.data.sequence["1"].OrderValue = orderData.orderValue;
 						
 						OrderCollection.create(orderData).exec(function(err, resp){
