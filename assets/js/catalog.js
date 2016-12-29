@@ -43,6 +43,9 @@ $(document).ready(function($){
 		placeOrder();
 	});
 
+
+	
+
 	$('#generate-otp').click(function(){
 		if (($('#contact-no').val().length > 10 || $('#contact-no').val().length < 10)) {
 			return false;
@@ -53,6 +56,14 @@ $(document).ready(function($){
 	$('#verify-otp').click(function(){
 		verifyOtp();
 	});
+
+	function bindRemoveCart() {
+		$('.prd-rmv-cart').on('click', function(){
+			var pid = $(this).parents('.onpage-cart-item').attr('data-prd-id');
+			var pvid = $(this).parents('.onpage-cart-item').attr('data-prd-variant');
+			removeFromCart(pid, pvid);
+		});
+	}
 
 	function generateOtp() {
 		$.ajax({
@@ -127,7 +138,17 @@ $(document).ready(function($){
 		}
 		localStorage.setItem('cartJson', JSON.stringify(userCart));
 		userState();
-	}	
+	}
+
+	function removeFromCart(productId, productVariant) {
+		var userCart =  JSON.parse(localStorage.getItem('cartJson'));
+		if (typeof userCart === 'object' && Object.keys(userCart).length && userCart.hasOwnProperty(productId + '-' + productVariant)) {
+			delete userCart[productId + '-' + productVariant];
+			$('.product_' + productId).find('.product-cnt').val(0);
+		}
+		localStorage.setItem('cartJson', JSON.stringify(userCart));
+		userState();
+	}		
 
 	function refreshCart(){
 		var localCartJson = getCartJson();
@@ -143,6 +164,8 @@ $(document).ready(function($){
 			cartHtml.find('.prd-variant').html(localCartJson[key].variant);
 			cartHtml.find('.onpage-cart-item').removeClass('hidden');
 			cartHtml.find('.prd-img').attr('src', '/images/' + localCartJson[key].image);
+			cartHtml.find('.onpage-cart-item').attr('data-prd-id', localCartJson[key].productId);
+			cartHtml.find('.onpage-cart-item').attr('data-prd-variant', localCartJson[key].variant);
 			total = total + parseInt(localCartJson[key].price * localCartJson[key].qty);
 			newCartHtml += cartHtml.html();
 			cartHtml = "";
@@ -154,6 +177,7 @@ $(document).ready(function($){
 			newCartHtml = "Create your basket of fresh produce";
 		}
 		$('.cart-items').html(newCartHtml);
+		bindRemoveCart();
 		saveCart(false);
 	}
 

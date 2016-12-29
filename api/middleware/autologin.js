@@ -20,9 +20,8 @@ module.exports = function(req, res, next) {
 				
 				req.user.name = response[0].name;
 				req.user.contact = response[0].contact;
-				
+				req.user.email = response[0].email;
 				req.user.address = !_.isEmpty(response[0].address) ? response[0].address : {};
-				
 				if (!_.isEmpty(req.user.address)) {
 					req.user.address = JSON.parse(req.user.address);
 					req.user.displayAddress = req.user.address.address1 + ', ' + req.user.address.address2 + 
@@ -34,7 +33,6 @@ module.exports = function(req, res, next) {
 					req.user.city = req.user.address.city;
 					req.user.state = req.user.address.state;							
 				}
-				//console.log(req.user.displayAddress);								
 				req.user.pincode = response[0].pincode;
 				req.user.cart = JSON.stringify(response[0].cart);
 				return next();	

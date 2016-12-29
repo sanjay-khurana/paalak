@@ -36,13 +36,13 @@ module.exports.routes = {
   '/': {
       target: 'CatalogController.index'
   },
-  '/createProduct': {
+  '/createProduct/': {
       target: 'CatalogController.createProduct'
   },
-  '/updateProductList' : {
+  '/updateProductList/' : {
       target : 'CatalogController.updateProductList'
   },
-  '/updateProduct/:id' : {
+  '/updateProduct/:id/' : {
       target : 'CatalogController.updateProduct'
   },
   '/createCategory/' : {
@@ -60,10 +60,10 @@ module.exports.routes = {
   '/placeOrder/' : {
     target: 'OrderController.placeOrder'  
   },
-  '/verifyOtp' : {
+  '/verifyOtp/' : {
     target : 'OrderController.verifyOtp'
   },
-   '/generateOtp' : {
+   '/generateOtp/' : {
     target : 'OrderController.generateOtp'
   },
   '/refund-cancellation-policy/' : {
@@ -86,6 +86,9 @@ module.exports.routes = {
   },
   '/contact/' : {
     target : 'CmsController.contact'
+  },
+  '/logout/' : {
+    target : 'OrderController.logout'
   }
 
   /***************************************************************************

@@ -37,6 +37,7 @@ module.exports.http = {
     //   'session',
        'myUserCookie',
        'bodyParser',
+     //  'intercept',
        'autologin',
     //   'handleBodyParserError',
     //   'compress',
@@ -45,6 +46,7 @@ module.exports.http = {
     //   '$custom',
        'router',
        'www'
+       
     //   'favicon',
     //   '404',
     //   '500'
@@ -66,6 +68,7 @@ module.exports.http = {
          return next();
      },
      autologin: require('./../api/middleware/autologin')
+   //  intercept : require('./../api/middleware/intercept')
 
 
   /***************************************************************************

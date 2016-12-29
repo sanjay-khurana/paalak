@@ -12,9 +12,9 @@
 				  <label class="col-md-4 control-label" for="pincode">Pin Code<span class="red">*</span></label>  
 				  <div class="col-md-4">
 				  <select id="pincode" name="pincode" class="delivery-time form-control">
-				  		<option value="">Select Pincode</option>
+				  		<option value="">Select Pincode </option>
 				    	<% for (var i in sails.config.pincodeCityStateMapping) { %>
-				    	<option value="<%= i %>"><%= i %></option>
+				    	<option value="<%= i %>"  <% if (req.user.pincode == i) { %> selected <% } %>><%= i %></option>
 				    	<% } %>
 				    </select>
 				  </div>

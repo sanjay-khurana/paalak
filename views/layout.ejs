@@ -49,6 +49,9 @@
         <div class="tab-desk-only"> 
           <img src="/images/phone-icon.png" width="18px"> 01139588188 &nbsp; &nbsp; &nbsp; &nbsp;
           <img width="20px" src="/images/whatsapp-icon.png"> 09545857545
+          <% if (req.isLoggedIn) { %>
+          <a href="/logout/">Logout</a>
+          <% } %>
         </div>
         <% if (req.isLoggedIn) { %>
         <div class="user-icon" >

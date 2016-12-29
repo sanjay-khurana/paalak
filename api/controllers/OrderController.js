@@ -29,7 +29,7 @@ var OrderController = BaseController.extend({
 				userData.name = req.user.name;
 				userData.contact = req.user.contact;
 				userData.email = req.user.email;
-				if (!_.isEmpty(req.user.address) && !_.isObject(req.user.address)) {
+				if (!_.isEmpty(req.user.address)) {
 					userData.address = JSON.stringify(req.user.address);	
 				}
 			}
@@ -364,6 +364,13 @@ var OrderController = BaseController.extend({
 				return res.json({"success" : true});	
 			})
 			
+		}
+	},
+
+	logout : function(req, res) {
+		if (!_.isEmpty(req.userCookie)) {
+			res.clearCookie('userCookie');
+			res.redirect('/');
 		}
 	}
 

@@ -72,6 +72,7 @@ module.exports = {
          'city' : 'New Delhi',
          'state' : 'Delhi'
       }
-   }
+   },
+    staticsRegex: /\.(eot|ttf|woff|gif|jpeg|jpg|png|woff2|woff|js|css|ico|mp4|webp)$/g
 
 };
