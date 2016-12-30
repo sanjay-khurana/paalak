@@ -73,7 +73,7 @@ header {
 	padding: 5px 0;
 }
 header .logo {
-	width: 115px;
+	width: 130px;
 }
 header .cart, .cart {
 	float: right;
@@ -201,6 +201,18 @@ header .cart span.desk-count {
 	padding:20px;
 	margin-top: 20px;
 	line-height: 170%;
+}
+.payment-options input[type=radio] {
+	width: 20px;
+	display: inline-block;
+	height: 12px;
+	margin-top: 10px;
+}
+.payment-options label {
+	min-width: 150px
+}
+.cart-prd-name {
+	max-width: 160px;
 }
 	
 

@@ -82,11 +82,11 @@
 				  </div>
 				</div>
 				
-				<div class="form-group">
+				<div class="form-group payment-options" style="font-size: 13px">
 				  <label class="col-md-4 control-label" for="Payment Type">Payment Method<span class="red">*</span></label>  
-				  <div class="col-md-4">
+				  <div class="col-md-8">
 				  <input id="OnlinePayment" name="paymentMethod" value="Online" type="radio" placeholder="" class="form-control input-md"><label for="OnlinePayment">Online Payment</label>
-				  <input id="cashId" name="paymentMethod" value="Cash" type="radio" placeholder="" class="form-control input-md"><label for="cashId">Cash on Delivery</label>
+				  <input id="cashId" name="paymentMethod" value="Cash" type="radio" placeholder="" class="form-control input-md"><label for="cashId">Cash on Delivery</label><br>
 				  <input id="PaytmId" name="paymentMethod" value="PayTm" type="radio" placeholder="" class="form-control input-md"><label for="PaytmId">Paytm on Delivery</label>
 				  <input id="CardOnDelivery" name="paymentMethod" value="CardOnDelivery" type="radio" placeholder="" class="form-control input-md"><label for="CardOnDelivery">Card on Delivery</label>
 				   <div class="paymentmethod-error error hidden">This field is mandatory </div> 
@@ -106,6 +106,13 @@
 				</div>
 
 				<!-- Button -->
+				<div class="form-group">
+				  <label class="col-md-4 control-label" for=""></label>
+				  <div class="col-md-8">
+				    <input type="checkbox" id="acceptance" checked="checked" name="acceptance" class="btn btn-primary">
+				    <label style="font-size: 12px;" for="PaytmId">I agree to receive information about offers on SMS and email</label>
+				  </div>
+				</div>
 				<div class="form-group">
 				  <label class="col-md-4 control-label" for=""></label>
 				  <div class="col-md-4">
@@ -131,5 +138,5 @@
 		</section>
 
 
-
+		<div class="clear"></div>
     </section>
