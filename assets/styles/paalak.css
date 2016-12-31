@@ -214,6 +214,19 @@ header .cart span.desk-count {
 .cart-prd-name {
 	max-width: 160px;
 }
+.usp-text {
+	text-align: center;
+	background: #fff;
+	border:1px solid #00871b;
+	padding: 7px 0;
+	color: #00871b;
+	display: block;
+	width: 98%;
+	font-weight: bold;
+}
+.usp-text img {
+	margin: 0 2px 0 20px
+}
 	
 
 /* media query for responsive design starts here */
@@ -323,6 +336,9 @@ header .cart span.desk-count {
 		min-height: 55px;
 		z-index: 100;
 		box-shadow: 0px -1px 2px #ccc;
+	}
+	.usp-text { 
+		width: 96%;
 	}
 
 }

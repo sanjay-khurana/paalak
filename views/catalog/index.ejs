@@ -1,5 +1,15 @@
     <section class="mt-20 main-wrapper"><br>
-    	<div class="tab-wrapper">
+    	<div class="row" style="margin-left: 0">
+    		<div class="usp-text">
+    			<img src="images/tick-icon.png" width="12px"> Direct from Farms
+    			<img src="images/tick-icon.png" width="12px"> Eat Fresh<br class="mob-only">
+    			<img src="images/tick-icon.png" width="12px"> Within 14 hrs of Plucking
+
+    		</div>
+
+    		<div class="clear"></div>
+    	</div>
+    	<div class="tab-wrapper mt-20">
 	    	<ul class="nav nav-tabs">
 	    	   <% for (var i in categories) { %>
 			  <li role="presentation"  data-category-id="<%= i %>" class="category_name category_id_<%= i %>"><a href="#"><%= categories[i] %></a></li>
