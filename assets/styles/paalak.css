@@ -73,7 +73,7 @@ header {
 	padding: 5px 0;
 }
 header .logo {
-	width: 130px;
+	width: 115px;
 }
 header .cart, .cart {
 	float: right;
@@ -339,6 +339,17 @@ header .cart span.desk-count {
 	}
 	.usp-text { 
 		width: 96%;
+	}
+	header .cart, .cart {
+		float: right;
+		margin-right: 5px;
+	}
+	.farm-fresh-logo {
+		width: 110px;
+	}
+	header .user-icon {
+		background: none;
+		padding-left: 0px
 	}
 
 }
